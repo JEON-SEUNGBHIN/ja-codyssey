@@ -70,6 +70,7 @@ def read_from_binary_file(filename):
 inventory = read_csv('Mars_Base_Inventory_List.csv')
 
 if inventory:
+    
     # 인화성이 높은 순으로 정렬
     sorted_inventory = sort_by_flammability(inventory)
 
@@ -77,6 +78,10 @@ if inventory:
     dangerous_items = filter_dangerous_items(sorted_inventory)
 
     # 결과 출력 (모든 컬럼 유지)
+    print('\n=== 원본 CSV 파일 내용 ===')
+    for item in inventory:
+        print(', '.join(f"{k}: {v}" for k, v in item.items()))
+
     print('\n=== 정렬된 화물 목록 (인화성 높은 순) ===')
     print('\n'.join(', '.join(f"{k}: {v}" for k, v in item.items()) for item in sorted_inventory))
 
