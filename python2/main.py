@@ -34,15 +34,37 @@ def sort_by_flammability(items):
 def filter_dangerous_items(items):
     return [item for item in items if item['Flammability'] >= 0.7]
 
-#리스트를 CSV 파일로 저장 (모든 컬럼 포함)
+# 리스트를 CSV 파일로 저장 (모든 컬럼 포함)
 def save_to_csv(filename, headers, items):
     try:
         with open(filename, 'w', encoding='utf-8') as file:
             file.write(','.join(headers) + '\n')
             file.writelines(','.join(str(item[h]) for h in headers) + '\n' for item in items)
-        print(f'"{filename}" 파일이 생성되었습니다.')
+        print(f'\n"{filename}" 파일이 생성되었습니다.')
     except Exception as e:
         print(f'오류 발생: {e}')
+
+# 리스트를 텍스트 기반의 이진 파일(.bin)로 저장      
+def save_to_binary_file(filename, items):
+    try:
+        with open(filename, 'wb') as file:
+            for item in items:
+                line = ', '.join(f'{k}: {v}' for k, v in item.items())
+                file.write((line + '\n').encode('utf-8'))
+        print(f'\n"{filename}" 이진 파일이 생성되었습니다.')
+    except Exception as e:
+        print(f'이진 파일 저장 중 오류 발생: {e}')
+
+# 이진 파일 출력    
+def read_from_binary_file(filename):
+    try:
+        with open(filename, 'rb') as file:
+            lines = file.readlines()
+        print(f'\n=== 이진 파일 "{filename}"의 내용 ===')
+        for line in lines:
+            print(line.decode('utf-8').strip())
+    except Exception as e:
+        print(f'이진 파일 읽기 중 오류 발생: {e}')
 
 # 파일 읽기
 inventory = read_csv('Mars_Base_Inventory_List.csv')
@@ -63,3 +85,9 @@ if inventory:
 
     # 위험 목록 CSV 파일 저장 (모든 컬럼 포함)
     save_to_csv('Mars_Base_Inventory_danger.csv', inventory[0].keys(), dangerous_items)
+
+    # 이진 파일 저장 (UTF-8 인코딩된 텍스트 기반)
+    save_to_binary_file('Mars_Base_Inventory_List.bin', sorted_inventory)
+
+    # 이진 파일 출력
+    read_from_binary_file('Mars_Base_Inventory_List.bin')
