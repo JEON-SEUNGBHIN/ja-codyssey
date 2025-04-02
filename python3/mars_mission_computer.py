@@ -39,7 +39,7 @@ class DummySensor:
       Sensor('mars_base_internal_oxygen', '화성 기지 내부 산소 농도', '%', 4, 7, 2)
     ]
 
-  # 모든 센서의 값을 랜덤으로 설정 (update 호출)
+  # 모든 센서에 대해 update()를 호출하여 센서값 갱신
   def set_env(self):
     for sensor in self.sensors:
       sensor.update()
