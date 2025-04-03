@@ -54,7 +54,7 @@ class DummySensor:
 
         for line in log_lines:
             print(line)
-        print()   # 터미널 줄바꿈
+        print()  # 줄바꿈
 
         return env_data
 
@@ -67,10 +67,21 @@ class MissionComputer:
 
     def get_sensor_data(self):
         self.env_values = self.ds.get_env()
+
+        # JSON 형식 출력
+        json_lines = ['{']
+        items = []
+        for key, val in self.env_values.items():
+            items.append(f'  "{key}": {val}')
+        json_lines.append(",\n".join(items))
+        json_lines.append('}')
+        print("\n".join(json_lines))
+        print()
+
         return self.env_values
 
 
-# 평균 출력
+# 평균 출력 함수
 def print_and_log_average(data_list, sensors):
     average = {}
     count = len(data_list)
@@ -95,26 +106,27 @@ def print_and_log_average(data_list, sensors):
 
     with open('log_record.log', 'a') as file:
         file.write('\n'.join(log_lines) + '\n\n')
+    print()
 
+
+# 메인 실행
 if __name__ == '__main__':
     ds = DummySensor()
-    mc = MissionComputer(ds)
+    RunComputer = MissionComputer(ds)
     collected = []
 
     print('실행 중입니다. 종료하려면 Window는 Ctrl + C / Mac은 Control + C 를 누르세요.\n')
-    
+
     try:
         while True:
-            env = mc.get_sensor_data()
+            env = RunComputer.get_sensor_data()
             collected.append(env)
 
-            if len(collected) >= 5:
+            if len(collected) >= 60:  # 5분치 데이터 (5초 × 60)
                 print_and_log_average(collected, ds.sensors)
-                collected.clear()
+                collected.clear()  # 다시 누적 시작
 
-            # 60초 동안 1초씩 쉬면서 Ctrl+C 감지
-            for _ in range(60):
-                time.sleep(1)
+            time.sleep(5)  # 5초 간격
 
     except KeyboardInterrupt:
         print('\nSystem stopped....')
