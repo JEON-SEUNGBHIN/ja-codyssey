@@ -8,10 +8,10 @@ import wave
 import numpy as np
 
 class VoiceRecorder:
-    def __init__(self, sample_rate=44100, directory='records', transcript_file='transcripts.csv', input_device=2):
+    def __init__(self, sample_rate=44100, directory='records', transcript_filename='transcripts.csv', input_device=2):
         self.sample_rate = sample_rate
         self.directory = directory
-        self.transcript_file = transcript_file
+        self.transcript_file = os.path.join(self.directory, transcript_filename)
         self.input_device = input_device
         os.makedirs(self.directory, exist_ok=True)
 
