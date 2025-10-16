@@ -1,7 +1,3 @@
-# crawling_KBS.py
-# Python 3.x
-# 네이버 로그인 전/후 콘텐츠 차이 비교 (강건 수집 버전)
-
 from typing import List, Iterable
 import time
 
@@ -15,7 +11,7 @@ from selenium.common.exceptions import TimeoutException, NoSuchElementException
 NAVER_HOME = 'https://www.naver.com'
 NAVER_LOGIN = 'https://nid.naver.com/nidlogin.login'
 
-TOP_N = 40  # 출력 개수 제한
+TOP_N = 40
 
 
 def uniq_keep_order(items: Iterable[str]) -> List[str]:
@@ -163,7 +159,6 @@ def main():
         input('로그인이 끝났으면 콘솔에서 Enter를 눌러 계속합니다... ')
 
         driver.switch_to.default_content()
-        # 로그인 완료 안정화
         time.sleep(2)
 
         driver.get(NAVER_HOME)
