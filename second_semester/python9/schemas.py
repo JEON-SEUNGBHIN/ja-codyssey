@@ -3,15 +3,19 @@ Pydantic 스키마 모델 정의
 
 API 요청/응답에 사용되는 데이터 모델을 정의합니다.
 """
-from pydantic import BaseModel
-from typing import Optional, Dict, Any
 from datetime import datetime
+from typing import Optional, Dict, Any
+
+from pydantic import BaseModel, Field
 
 
 class QuestionCreate(BaseModel):
-    """질문 생성 요청 모델"""
-    subject: str
-    content: str
+    """질문 생성 요청 모델
+
+    제목과 내용은 빈 문자열을 허용하지 않는다.
+    """
+    subject: str = Field(..., min_length=1)
+    content: str = Field(..., min_length=1)
 
 
 class QuestionUpdate(BaseModel):
