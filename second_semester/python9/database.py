@@ -3,6 +3,8 @@
 SQLite + SQLAlchemy ORM 설정
 """
 
+from contextlib import contextmanager
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.pool import StaticPool
@@ -29,13 +31,24 @@ SessionLocal = sessionmaker(
 Base = declarative_base()
 
 
-def get_db():
+@contextmanager
+def db_session():
     """
-    DB 세션을 제공하는 제너레이터 유틸 (주로 FastAPI에서 사용)
-    여기서는 샘플 코드용으로만 사용 가능.
+    contextlib.contextmanager를 사용한 DB 세션 컨텍스트 매니저.
     """
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+
+def get_db():
+    """
+    FastAPI 의존성으로 사용할 DB 세션 제너레이터.
+
+    내부에서 contextlib 기반 컨텍스트 매니저를 사용해
+    세션을 열고, 사용 후 자동으로 닫는다.
+    """
+    with db_session() as db:
+        yield db

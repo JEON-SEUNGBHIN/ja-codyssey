@@ -26,8 +26,9 @@ class QuestionResponse(BaseModel):
     subject: str
     content: str
     create_date: datetime
-    
+
     class Config:
+        # SQLAlchemy ORM 객체를 그대로 넣어도 변환될 수 있도록 설정
         from_attributes = True
 
 
@@ -38,7 +39,13 @@ class QuestionListResponse(BaseModel):
 
 
 class ApiResponse(BaseModel):
-    """API 공통 응답 모델"""
+    """
+    API 공통 응답 모델
+
+    status: 'success' | 'error' 등의 상태 문자열
+    message: 선택적인 설명 메시지
+    data: 실제 응답 데이터(예: {'questions': [...], 'count': 10})
+    """
     status: str
     message: Optional[str] = None
     data: Optional[Dict[str, Any]] = None
